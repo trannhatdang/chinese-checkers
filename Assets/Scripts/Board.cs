@@ -99,7 +99,7 @@ public class Board : MonoBehaviour
 		}
 	}
 
-	public void ResetHighlight()
+	public async UniTask ResetHighlight()
 	{
 		int m = m_nodeList.Count;
 		for (int i = 0; i < m; ++i)
@@ -109,7 +109,7 @@ public class Board : MonoBehaviour
 			{
 				if (m_nodeList[i][j] == null) continue;
 
-				m_nodeList[i][j].ResetHighlight();
+				await m_nodeList[i][j].ResetHighlight();
 			}
 		}
 	}
@@ -336,6 +336,6 @@ public class Board : MonoBehaviour
 	{
 		// Debug.Log($"{color}, {score}");
 
-		return GetScore(color) >= 35;
+		return GetScore(color) >= 50;
 	}
 }

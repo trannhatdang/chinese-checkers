@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 
 public class Node : MonoBehaviour
 {
@@ -93,12 +94,12 @@ public class Node : MonoBehaviour
 
 	void OnMouseDown()
 	{
-		if (m_isOfPlayer != m_gameManager.MainPlayerColor)
+		if (!m_gameManager.IsHumanTurn)
 		{
 			return;
 		}
 
-		if (m_gameManager.CurrPlayer != m_gameManager.MainPlayer)
+		if (m_gameManager.CurrPlayer != m_isOfPlayer - 1)
 		{
 			return;
 		}
@@ -108,18 +109,28 @@ public class Node : MonoBehaviour
 
 	void OnMouseDrag()
 	{
-		Vector2 mousePos = Camera.main.ScreenToWorldPoint(m_mouse.ReadValue<Vector2>());
-		transform.position = mousePos;
-	}
-
-	void OnMouseUp()
-	{
-		if (m_isOfPlayer != m_gameManager.MainPlayerColor)
+		if (!m_gameManager.IsHumanTurn)
 		{
 			return;
 		}
 
-		if (m_gameManager.CurrPlayer != m_gameManager.MainPlayer)
+		if (m_gameManager.CurrPlayer != m_isOfPlayer - 1)
+		{
+			return;
+		}
+
+		Vector2 mousePos = Camera.main.ScreenToWorldPoint(m_mouse.ReadValue<Vector2>());
+		transform.position = mousePos;
+	}
+
+	async void OnMouseUp()
+	{
+		if (!m_gameManager.IsHumanTurn)
+		{
+			return;
+		}
+
+		if (m_gameManager.CurrPlayer != m_isOfPlayer - 1)
 		{
 			return;
 		}
@@ -133,9 +144,9 @@ public class Node : MonoBehaviour
 
 			if ((mousePos - (Vector2)move[move.Count - 1].transform.position).magnitude < 1)
 			{
-				m_gameBoard.ChangePosition(this, move);
+				await m_gameBoard.ChangePosition(this, move);
+				await m_gameBoard.ResetHighlight();
 				m_gameManager.NextTurn();
-				m_gameBoard.ResetHighlight();
 				return;
 			}
 		}
@@ -156,9 +167,9 @@ public class Node : MonoBehaviour
 		m_spr.DOFade(0.8f, 0.0f);
 	}
 
-	public void ResetHighlight()
+	public async UniTask ResetHighlight()
 	{
-		m_spr.DOFade(1.0f, 0.0f);
+		await m_spr.DOFade(1.0f, 0.0f).AsyncWaitForCompletion();
 		changeColor();
 	}
 }

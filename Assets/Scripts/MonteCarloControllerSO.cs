@@ -118,13 +118,13 @@ public class MCTSControllerSO : PlayerControllerSO
 	{
 		// For MCTS to work, you need a "proxy" win condition.
 		// Usually: is the average distance to the goal smaller than when we started?
-		float score = 0;
-		var myNodes = board.GetNodesOfColor(color);
-		Vector3 goal = new Vector3(0, 10, 0); // Define based on your board layout
-
-		foreach (var n in myNodes) score += Vector3.Distance(n.Position, goal);
-
-		// This is a simplified "win" - did we progress?
-		return score < 50f;
+		// float score = 0;
+		// var myNodes = board.GetNodesOfColor(color);
+		// Vector3 goal = new Vector3(0, 10, 0); // Define based on your board layout
+		//
+		// foreach (var n in myNodes) score += Vector3.Distance(n.Position, goal);
+		//
+		// // This is a simplified "win" - did we progress?
+		return board.GetScore(color) > 50;
 	}
 }

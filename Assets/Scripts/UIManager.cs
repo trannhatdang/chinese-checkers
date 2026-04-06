@@ -8,6 +8,8 @@ public class UIManager : MonoBehaviour
 	[SerializeField] GameObject m_pauseButton;
 	[SerializeField] GameObject m_pauseScreen;
 
+	[SerializeField] GameObject m_startScreen;
+
 	public void Pause()
 	{
 		m_pauseButton.SetActive(false);
@@ -25,5 +27,10 @@ public class UIManager : MonoBehaviour
 		m_winnerText.transform.parent.gameObject.SetActive(true);
 		m_winnerText.text = $"Player({name}) {color} won!";
 		m_winnerText.transform.parent.transform.DOMove(new Vector3(640, 360, 0), 0.5f);
+	}
+
+	public void InPlay()
+	{
+		m_startScreen.SetActive(false);
 	}
 }

@@ -43,10 +43,14 @@ public class Trainer : MonoBehaviour
 		m_gameManager.StartGame(EvolvePopulation);
 	}
 
-	void SimulateGames()
+	public void SimulateGames()
 	{
 		// Here you would tell your GameManager to run games using m_population
 		// and assign Fitness = (1 / turnsTaken) or (distanceCovered).
+		for (int i = 0; i < 6; ++i)
+		{
+			m_gameManager.SetPlayerAI(i, i + 3);
+		}
 		m_gameManager.StartGame(EvolvePopulation);
 	}
 
@@ -60,13 +64,13 @@ public class Trainer : MonoBehaviour
 
 	}
 
-	void OnGUI()
-	{
-		if (GUI.Button(new Rect(10, 240, 150, 110), "Start Trainning"))
-		{
-			// RandomizeWeights();
-			SimulateGames();
-			Time.timeScale = 100.0f;
-		}
-	}
+	// void OnGUI()
+	// {
+	// 	if (GUI.Button(new Rect(10, 240, 150, 110), "Start Trainning"))
+	// 	{
+	// 		// RandomizeWeights();
+	// 		SimulateGames();
+	// 		Time.timeScale = 100.0f;
+	// 	}
+	// }
 }

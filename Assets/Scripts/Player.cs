@@ -7,6 +7,11 @@ public class Player : MonoBehaviour
 	[SerializeField] Board m_board;
 	[SerializeField] int m_color;
 
+	public PlayerControllerSO PlayerController
+	{
+		get { return m_playerControllerSO; }
+	}
+
 	public int Color
 	{
 		get { return m_color; }

@@ -16,7 +16,22 @@ public class GameManager : MonoBehaviour
 
 	[SerializeField] List<Player> m_playerList;
 
-	private Action m_endGameCallback;
+	[SerializeField] PlayerControllerSO m_humanController;
+	[SerializeField] PlayerControllerSO m_MCTSController;
+	[SerializeField] PlayerControllerSO m_miniMaxController;
+	[SerializeField] PlayerControllerSO m_machineLearningAIController;
+	[SerializeField] PlayerControllerSO m_machineLearningAIController2;
+	[SerializeField] PlayerControllerSO m_machineLearningAIController3;
+	[SerializeField] PlayerControllerSO m_machineLearningAIController4;
+	[SerializeField] PlayerControllerSO m_machineLearningAIController5;
+	[SerializeField] PlayerControllerSO m_machineLearningAIController6;
+
+	public bool IsHumanTurn
+	{
+		get { return m_playerList[m_currPlayer].PlayerController is HumanControllerSO; }
+	}
+
+	private Action m_endGameCallback = null;
 
 	public int TotalTurns
 	{
@@ -40,7 +55,12 @@ public class GameManager : MonoBehaviour
 
 	void Start()
 	{
+		for (int i = 0; i < 6; ++i)
+		{
+			SetPlayerAI(i, 0);
+		}
 
+		Time.timeScale = 1.0f;
 	}
 
 	// Update is called once per frame
@@ -53,6 +73,14 @@ public class GameManager : MonoBehaviour
 	{
 		m_playerList[m_currPlayer].BeginTurn();
 		m_endGameCallback = endGameCallback;
+		m_UIManager.InPlay();
+	}
+
+	public void StartGame()
+	{
+		m_playerList[m_currPlayer].BeginTurn();
+		m_endGameCallback = null;
+		m_UIManager.InPlay();
 	}
 
 	public void ResetGame()
@@ -64,6 +92,14 @@ public class GameManager : MonoBehaviour
 	{
 		if (m_board.CheckWin(m_playerList[m_currPlayer].Color))
 		{
+			if (m_endGameCallback != null)
+			{
+				m_totalTurns = 0;
+				ResetGame();
+				m_endGameCallback();
+				return;
+			}
+
 			DeclareWinner(m_playerList[m_currPlayer].Color, m_playerList[m_currPlayer].Name);
 			return;
 		}
@@ -111,16 +147,80 @@ public class GameManager : MonoBehaviour
 		m_playerList[index].SetAI(controller);
 	}
 
-	void OnGUI()
+	public void SetPlayerAI(int index, int controller)
 	{
-		if (GUI.Button(new Rect(10, 10, 150, 100), "Begin"))
+		switch (controller)
 		{
-			m_playerList[m_currPlayer].BeginTurn();
-		}
-
-		if (GUI.Button(new Rect(160, 10, 150, 100), "Reset"))
-		{
-			ResetGame();
+			case 1:
+				SetAI(index, m_MCTSController);
+				break;
+			case 2:
+				SetAI(index, m_miniMaxController);
+				break;
+			case 3:
+				SetAI(index, m_machineLearningAIController);
+				break;
+			case 4:
+				SetAI(index, m_machineLearningAIController2);
+				break;
+			case 5:
+				SetAI(index, m_machineLearningAIController3);
+				break;
+			case 6:
+				SetAI(index, m_machineLearningAIController4);
+				break;
+			case 7:
+				SetAI(index, m_machineLearningAIController5);
+				break;
+			case 8:
+				SetAI(index, m_machineLearningAIController6);
+				break;
+			default:
+				SetAI(index, m_humanController);
+				break;
 		}
 	}
+
+	public void SetPlayerOneAI(int controller)
+	{
+		SetPlayerAI(0, controller);
+	}
+
+	public void SetPlayerTwoAI(int controller)
+	{
+		SetPlayerAI(1, controller);
+	}
+
+	public void SetPlayerThreeAI(int controller)
+	{
+		SetPlayerAI(2, controller);
+	}
+
+	public void SetPlayerFourAI(int controller)
+	{
+		SetPlayerAI(3, controller);
+	}
+
+	public void SetPlayerFiveAI(int controller)
+	{
+		SetPlayerAI(4, controller);
+	}
+
+	public void SetPlayerSixAI(int controller)
+	{
+		SetPlayerAI(5, controller);
+	}
+
+	// void OnGUI()
+	// {
+	// 	if (GUI.Button(new Rect(10, 10, 150, 100), "Begin"))
+	// 	{
+	// 		m_playerList[m_currPlayer].BeginTurn();
+	// 	}
+	//
+	// 	if (GUI.Button(new Rect(160, 10, 150, 100), "Reset"))
+	// 	{
+	// 		ResetGame();
+	// 	}
+	// }
 }
