@@ -7,11 +7,9 @@ public class Board : MonoBehaviour
 {
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	[SerializeField] TextAsset m_board;
-
 	[SerializeField] List<TextAsset> m_winBoards;
-
-	[SerializeField] Node m_node;
 	[SerializeField] List<List<Node>> m_nodeList;
+	[SerializeField] Node m_node;
 
 	[SerializeField] GameManager m_gameManager;
 	void Start()

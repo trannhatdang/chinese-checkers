@@ -8,23 +8,13 @@ public class GameManager : MonoBehaviour
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	[SerializeField] UIManager m_UIManager;
 	[SerializeField] Board m_board;
-	[SerializeField] int m_mainPlayerColor = -1;
-	[SerializeField] int m_mainPlayer = -1;
-
 	[SerializeField] int m_currPlayer = 0;
 	[SerializeField] int m_totalTurns = 0;
 
 	[SerializeField] List<Player> m_playerList;
 
-	[SerializeField] PlayerControllerSO m_humanController;
-	[SerializeField] PlayerControllerSO m_MCTSController;
-	[SerializeField] PlayerControllerSO m_miniMaxController;
-	[SerializeField] PlayerControllerSO m_machineLearningAIController;
-	[SerializeField] PlayerControllerSO m_machineLearningAIController2;
-	[SerializeField] PlayerControllerSO m_machineLearningAIController3;
-	[SerializeField] PlayerControllerSO m_machineLearningAIController4;
-	[SerializeField] PlayerControllerSO m_machineLearningAIController5;
-	[SerializeField] PlayerControllerSO m_machineLearningAIController6;
+	[SerializeField] PlayerControllerListSO m_playerControllerList;
+
 
 	public bool IsHumanTurn
 	{
@@ -38,19 +28,9 @@ public class GameManager : MonoBehaviour
 		get { return m_totalTurns; }
 	}
 
-	public int MainPlayerColor
-	{
-		get { return m_mainPlayerColor; }
-	}
-
 	public int CurrPlayer
 	{
 		get { return m_currPlayer; }
-	}
-
-	public int MainPlayer
-	{
-		get { return m_mainPlayer; }
 	}
 
 	void Start()
@@ -210,17 +190,4 @@ public class GameManager : MonoBehaviour
 	{
 		SetPlayerAI(5, controller);
 	}
-
-	// void OnGUI()
-	// {
-	// 	if (GUI.Button(new Rect(10, 10, 150, 100), "Begin"))
-	// 	{
-	// 		m_playerList[m_currPlayer].BeginTurn();
-	// 	}
-	//
-	// 	if (GUI.Button(new Rect(160, 10, 150, 100), "Reset"))
-	// 	{
-	// 		ResetGame();
-	// 	}
-	// }
 }

@@ -155,12 +155,6 @@ public class Node : MonoBehaviour
 		m_gameBoard.ResetHighlight();
 	}
 
-	public void SmallHighlight()
-	{
-		m_spr.color = Color.black;
-		m_spr.DOFade(0.5f, 0.0f);
-	}
-
 	public void Highlight()
 	{
 		m_spr.color = Color.black;
