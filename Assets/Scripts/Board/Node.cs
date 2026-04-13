@@ -161,9 +161,9 @@ public class Node : MonoBehaviour
 		m_spr.DOFade(0.8f, 0.0f);
 	}
 
-	public async UniTask ResetHighlight()
+	public void ResetHighlight()
 	{
-		await m_spr.DOFade(1.0f, 0.0f).AsyncWaitForCompletion();
+		m_spr.DOFade(1.0f, 0.0f);
 		changeColor();
 	}
 }

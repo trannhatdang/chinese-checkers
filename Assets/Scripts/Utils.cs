@@ -16,9 +16,6 @@ public static class Utils
 			var line = new List<int>();
 			for (int j = 0; j < readline.Length; ++j)
 			{
-				// Debug.Log($"{i}, {j}");
-				// Debug.Log($"length: {lines.Length}, {readline.Length}");
-
 				int newNum = 0;
 				bool success = Int32.TryParse(readline[j], out newNum);
 

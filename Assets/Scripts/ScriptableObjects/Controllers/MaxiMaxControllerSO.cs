@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/PlayerControllers/MaximaxControllerSO")]
 public class MaximaxControllerSO : PlayerControllerSO
 {
 	[SerializeField] private int m_maxDepth = 3; // Keep this low for performance
 
-	public async override void BeginTurn(Board board, GameManager gm, int color)
+	public async override UniTask BeginTurn(Board board, int color)
 	{
 		Node bestNode = null;
 		List<Node> bestMove = null;
@@ -55,8 +55,6 @@ public class MaximaxControllerSO : PlayerControllerSO
 			}
 			await board.ChangePosition(bestNode, bestMove);
 		}
-
-		gm.NextTurn();
 	}
 
 	private float Maximax(Board board, int color, int depth)
@@ -95,16 +93,8 @@ public class MaximaxControllerSO : PlayerControllerSO
 		return maxScore == float.NegativeInfinity ? EvaluateBoard(board, color) : maxScore;
 	}
 
-	// A simple heuristic: The sum of distances of all pieces to the "goal"
 	private float EvaluateBoard(Board board, int color)
 	{
 		return board.GetScore(color);
 	}
-
-	// private Vector3 GetGoalPosition(int color)
-	// {
-	// 	// Return the target coordinate for the specific player color
-	// 	// This should be the far corner of the Chinese Checkers star
-	// 	return new Vector3(0, 10, 0); // Placeholder
-	// }
 }

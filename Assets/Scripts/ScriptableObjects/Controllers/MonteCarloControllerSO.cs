@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using System.Linq;
 
@@ -10,7 +9,7 @@ public class MCTSControllerSO : PlayerControllerSO
 	[SerializeField] int m_simulationsPerMove = 100;
 	[SerializeField] int m_maxRolloutDepth = 20;
 
-	public async override void BeginTurn(Board board, int color)
+	public async override UniTask BeginTurn(Board board, int color)
 	{
 		Node bestNode = null;
 		List<Node> bestPath = null;

@@ -5,15 +5,10 @@ using Cysharp.Threading.Tasks;
 
 public class Board : MonoBehaviour
 {
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
-	// [SerializeField] TextAsset m_board;
-	// [SerializeField] List<TextAsset> m_winBoards;
-	//
-	// [SerializeField] Config m
 	[SerializeField] List<List<Node>> m_nodeList;
 	[SerializeField] Node m_node;
-
 	[SerializeField] GameManager m_gameManager;
+
 	void Start()
 	{
 		m_nodeList = new List<List<Node>>();
@@ -99,7 +94,7 @@ public class Board : MonoBehaviour
 		}
 	}
 
-	public async UniTask ResetHighlight()
+	public void ResetHighlight()
 	{
 		int m = m_nodeList.Count;
 		for (int i = 0; i < m; ++i)
@@ -109,7 +104,7 @@ public class Board : MonoBehaviour
 			{
 				if (m_nodeList[i][j] == null) continue;
 
-				await m_nodeList[i][j].ResetHighlight();
+				m_nodeList[i][j].ResetHighlight();
 			}
 		}
 	}
@@ -143,7 +138,6 @@ public class Board : MonoBehaviour
 	{
 		bool existNewNode = false;
 		if (numIter > 20) return;
-		// Debug.Log(numIter);
 
 		for (int i = 0; i < allMoves.Count; ++i)
 		{
@@ -298,7 +292,7 @@ public class Board : MonoBehaviour
 
 	public void Reset()
 	{
-		List<List<int>> data = Utils.ReadCSV(GetCurrBoard());
+		List<List<int>> data = Utils.ReadCSV(m_gameManager.GetCurrBoard());
 
 		int m = data.Count;
 		for (int i = 0; i < m; ++i)
@@ -318,7 +312,7 @@ public class Board : MonoBehaviour
 
 	public int GetScore(int color)
 	{
-		List<List<int>> winBoard = Utils.ReadCSV(m_gameManager.GetWinBoards()[color - 1]);
+		List<List<int>> winBoard = Utils.ReadCSV(m_gameManager.GetWinBoardList()[color - 1]);
 
 		List<Node> nodeList = GetNodesOfColor(color);
 		int score = 0;

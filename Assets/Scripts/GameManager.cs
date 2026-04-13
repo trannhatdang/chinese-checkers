@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 	[SerializeField] Board m_board;
 	[SerializeField] TurnManager m_turnManager;
 	[SerializeField] PlayerControllerListSO m_playerControllerList;
-	[SerializeField] GameMode m_gameMode;
+	[SerializeField] Config m_config;
 	[SerializeField] int m_currPlayer = 0;
 	[SerializeField] int m_totalTurns = 0;
 
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
 	{
 		for (int i = 0; i < 6; ++i)
 		{
-			SetPlayerAI(i, 0);
+			m_config.SetPlayerAI(i, 0);
 		}
 
 		Time.timeScale = 1.0f;
@@ -46,6 +46,13 @@ public class GameManager : MonoBehaviour
 	void Update()
 	{
 
+	}
+
+	void endGameWithCallback()
+	{
+		m_totalTurns = 0;
+		ResetGame();
+		m_endGameCallback();
 	}
 
 	// GAME/TURN RELATED
@@ -67,9 +74,7 @@ public class GameManager : MonoBehaviour
 		{
 			if (m_endGameCallback != null)
 			{
-				m_totalTurns = 0;
-				ResetGame();
-				m_endGameCallback();
+				endGameWithCallback();
 				return;
 			}
 
@@ -77,16 +82,14 @@ public class GameManager : MonoBehaviour
 			return;
 		}
 
-		m_currPlayer = (m_currPlayer + 1) % m_playerList.Count;
-		m_totalTurns++;
-
-		if (m_totalTurns >= 60 && m_endGameCallback != null)
+		if (m_totalTurns >= m_config.MaxTotalTurns && m_endGameCallback != null)
 		{
-			m_totalTurns = 0;
-			ResetGame();
-			m_endGameCallback();
+			endGameWithCallback();
 			return;
 		}
+
+		m_currPlayer = (m_currPlayer + 1) % m_config.NumPlayers;
+		m_totalTurns++;
 
 		m_playerList[m_currPlayer].BeginTurn();
 	}
@@ -110,122 +113,20 @@ public class GameManager : MonoBehaviour
 		m_UIManager.UnPause();
 	}
 
-	public void SetAI(int index, PlayerControllerSO controller)
-	{
-		m_playerList[index].SetAI(controller);
-	}
-
-	// AI RELATED
-	public void SetPlayerAI(int index, int controller)
-	{
-		if (m_gameMode == GameMode.TwoPlayer)
-		{
-			SetPlayerAITwoPlayer(index, controller);
-		}
-		else
-		{
-			SetPlayerAISixPlayer(index, controller);
-		}
-	}
-
-	public void SetPlayerAITwoPlayer(int index, int controller)
-	{
-		switch (controller)
-		{
-			case 1:
-				SetAI(index, m_playerControllerList.MCTSController);
-				break;
-			case 2:
-				SetAI(index, m_playerControllerList.MiniMaxController);
-				break;
-			case 3:
-				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[0]);
-				break;
-			case 4:
-				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[1]);
-				break;
-			case 5:
-				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[2]);
-				break;
-			case 6:
-				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[3]);
-				break;
-			case 7:
-				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[4]);
-				break;
-			case 8:
-				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[5]);
-				break;
-			default:
-				SetAI(index, m_playerControllerList.HumanController);
-				break;
-		}
-
-	}
-
-	public void SetPlayerAISixPlayer(int index, int controller)
-	{
-		switch (controller)
-		{
-			case 1:
-				SetAI(index, m_playerControllerList.MCTSController);
-				break;
-			case 2:
-				SetAI(index, m_playerControllerList.MaxiMaxController);
-				break;
-			case 3:
-				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[0]);
-				break;
-			case 4:
-				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[1]);
-				break;
-			case 5:
-				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[2]);
-				break;
-			case 6:
-				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[3]);
-				break;
-			case 7:
-				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[4]);
-				break;
-			case 8:
-				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[5]);
-				break;
-			default:
-				SetAI(index, m_playerControllerList.HumanController);
-				break;
-		}
-	}
-
-	public void SetPlayerOneAI(int controller)
-	{
-		SetPlayerAI(0, controller);
-	}
-
-	public void SetPlayerTwoAI(int controller)
-	{
-		SetPlayerAI(1, controller);
-	}
-
-	public void SetPlayerThreeAI(int controller)
-	{
-		SetPlayerAI(2, controller);
-	}
-
-	public void SetPlayerFourAI(int controller)
-	{
-		SetPlayerAI(3, controller);
-	}
-
-	public void SetPlayerFiveAI(int controller)
-	{
-		SetPlayerAI(4, controller);
-	}
-
-	public void SetPlayerSixAI(int controller)
-	{
-		SetPlayerAI(5, controller);
-	}
-
 	// CONFIG RELATED
+
+	public Config GetConfig()
+	{
+		return m_config;
+	}
+
+	public TextAsset GetCurrBoard()
+	{
+		return m_config.GetCurrBoard();
+	}
+
+	public List<TextAsset> GetWinBoardList()
+	{
+		return m_config.GetWinBoardList();
+	}
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System.Linq;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/PlayerControllers/MLControllerSO")]

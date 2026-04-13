@@ -1,19 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/PlayerControllers/MinimaxControllerSO")]
 public class MinimaxControllerSO : PlayerControllerSO
 {
-	[SerializeField] private int m_maxDepth = 3; // Keep this low for performance
+	[SerializeField] private int m_maxDepth = 5; // Keep this low for performance
 
-	public async override void BeginTurn(Board board, GameManager gm, int color)
+	public async override UniTask BeginTurn(Board board, int color)
 	{
 		Node bestNode = null;
 		List<Node> bestMove = null;
 		float bestScore = float.NegativeInfinity;
 
 		List<Node> myNodes = board.GetNodesOfColor(color);
+		float alpha = float.NegativeInfinity;
+		float beta = float.PositiveInfinity;
 
 		// 1. Evaluate all possible moves for all my pieces
 		foreach (Node node in myNodes)
@@ -30,7 +32,7 @@ public class MinimaxControllerSO : PlayerControllerSO
 				destination.IsOfPlayer = originalColor;
 
 				// 2. Recurse using Minimax
-				float score = Minimax(board, color, m_maxDepth - 1);
+				float score = findMin(board, (color + 1) % 2, m_maxDepth - 1, alpha, beta);
 
 				// 3. Undo Move
 				destination.IsOfPlayer = 0;
@@ -42,24 +44,22 @@ public class MinimaxControllerSO : PlayerControllerSO
 					bestNode = node;
 					bestMove = path;
 				}
+
+				if (score > alpha)
+				{
+					alpha = score;
+				}
 			}
 		}
 
 		// 4. Execute the best move found
 		if (bestNode != null && bestMove != null)
 		{
-			if (color == 6)
-			{
-				// Debug.Log($"{bestMove[bestMove.Count - 1].X}, {bestMove[bestMove.Count - 1].Y}");
-				Debug.Log($"{bestMove.Count}");
-			}
 			await board.ChangePosition(bestNode, bestMove);
 		}
-
-		gm.NextTurn();
 	}
 
-	private float Minimax(Board board, int color, int depth)
+	private float findMax(Board board, int color, int depth, float alpha, float beta)
 	{
 		// Base case: leaf node or max depth reached
 		if (depth <= 0)
@@ -82,17 +82,64 @@ public class MinimaxControllerSO : PlayerControllerSO
 				dest.IsOfPlayer = color;
 
 				// Recurse (In Minimax, we always seek the MAX, even at the next depth)
-				float score = Minimax(board, color, depth - 1);
-
-				if (score > maxScore) maxScore = score;
+				float score = findMin(board, (color + 1) % 2, depth - 1, alpha, beta);
 
 				// Undo
 				dest.IsOfPlayer = 0;
 				node.IsOfPlayer = color;
+
+				if (score > maxScore) maxScore = score;
+				if (score > alpha) alpha = score;
+
+				if (alpha > beta)
+				{
+					return maxScore == float.NegativeInfinity ? EvaluateBoard(board, color) : maxScore;
+				}
 			}
 		}
 
 		return maxScore == float.NegativeInfinity ? EvaluateBoard(board, color) : maxScore;
+	}
+
+	private float findMin(Board board, int color, int depth, float alpha, float beta)
+	{
+		// Base case: leaf node or max depth reached
+		if (depth <= 0)
+		{
+			return EvaluateBoard(board, color);
+		}
+
+		float minScore = float.PositiveInfinity;
+		List<Node> myNodes = board.GetNodesOfColor(color);
+
+		foreach (Node node in myNodes)
+		{
+			List<List<Node>> paths = board.PossibleMoves(node);
+			foreach (List<Node> path in paths)
+			{
+				Node dest = path[path.Count - 1];
+
+				// Virtual Move
+				node.IsOfPlayer = 0;
+				dest.IsOfPlayer = color;
+
+				// Recurse (In Minimax, we always seek the MAX, even at the next depth)
+				float score = findMax(board, (color + 1) % 2, depth - 1, alpha, beta);
+				// Undo
+				dest.IsOfPlayer = 0;
+				node.IsOfPlayer = color;
+
+				if (score < minScore) minScore = score;
+				if (score < beta) beta = score;
+
+				if (alpha > beta)
+				{
+					return minScore == float.PositiveInfinity ? EvaluateBoard(board, color) : minScore;
+				}
+			}
+		}
+
+		return minScore == float.PositiveInfinity ? EvaluateBoard(board, color) : minScore;
 	}
 
 	// A simple heuristic: The sum of distances of all pieces to the "goal"

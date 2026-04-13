@@ -16,7 +16,6 @@ public class Trainer : MonoBehaviour
 
 	void Start()
 	{
-		// Step 1: Create Generation 0 with random weights
 
 	}
 
@@ -63,14 +62,4 @@ public class Trainer : MonoBehaviour
 
 
 	}
-
-	// void OnGUI()
-	// {
-	// 	if (GUI.Button(new Rect(10, 240, 150, 110), "Start Trainning"))
-	// 	{
-	// 		// RandomizeWeights();
-	// 		SimulateGames();
-	// 		Time.timeScale = 100.0f;
-	// 	}
-	// }
 }

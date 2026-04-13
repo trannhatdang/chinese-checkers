@@ -10,6 +10,7 @@ public class PlayerControllerListSO : ScriptableObject
 	[SerializeField] PlayerControllerSO m_maxiMaxController;
 
 	[SerializeField] List<PlayerControllerSO> m_machineLearningAIControllerList;
+	[SerializeField] List<PlayerControllerSO> m_onlineControllerList;
 
 	public PlayerControllerSO HumanController
 	{
@@ -34,5 +35,10 @@ public class PlayerControllerListSO : ScriptableObject
 	public List<PlayerControllerSO> MachineLearningAIControllerList
 	{
 		get { return m_machineLearningAIControllerList; }
+	}
+
+	public List<PlayerControllerSO> OnlineControllerList
+	{
+		get { return m_onlineControllerList; }
 	}
 }
