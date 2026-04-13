@@ -6,22 +6,21 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
+	[SerializeField] List<Player> m_playerList;
 	[SerializeField] UIManager m_UIManager;
 	[SerializeField] Board m_board;
+	[SerializeField] TurnManager m_turnManager;
+	[SerializeField] PlayerControllerListSO m_playerControllerList;
+	[SerializeField] GameMode m_gameMode;
 	[SerializeField] int m_currPlayer = 0;
 	[SerializeField] int m_totalTurns = 0;
 
-	[SerializeField] List<Player> m_playerList;
-
-	[SerializeField] PlayerControllerListSO m_playerControllerList;
-
+	private Action m_endGameCallback = null;
 
 	public bool IsHumanTurn
 	{
 		get { return m_playerList[m_currPlayer].PlayerController is HumanControllerSO; }
 	}
-
-	private Action m_endGameCallback = null;
 
 	public int TotalTurns
 	{
@@ -49,17 +48,11 @@ public class GameManager : MonoBehaviour
 
 	}
 
+	// GAME/TURN RELATED
 	public void StartGame(Action endGameCallback = null)
 	{
 		m_playerList[m_currPlayer].BeginTurn();
 		m_endGameCallback = endGameCallback;
-		m_UIManager.InPlay();
-	}
-
-	public void StartGame()
-	{
-		m_playerList[m_currPlayer].BeginTurn();
-		m_endGameCallback = null;
 		m_UIManager.InPlay();
 	}
 
@@ -84,7 +77,7 @@ public class GameManager : MonoBehaviour
 			return;
 		}
 
-		m_currPlayer = (m_currPlayer + 1) % 6;
+		m_currPlayer = (m_currPlayer + 1) % m_playerList.Count;
 		m_totalTurns++;
 
 		if (m_totalTurns >= 60 && m_endGameCallback != null)
@@ -117,46 +110,89 @@ public class GameManager : MonoBehaviour
 		m_UIManager.UnPause();
 	}
 
-	public void Reload()
-	{
-		SceneManager.LoadSceneAsync(0);
-	}
-
 	public void SetAI(int index, PlayerControllerSO controller)
 	{
 		m_playerList[index].SetAI(controller);
 	}
 
+	// AI RELATED
 	public void SetPlayerAI(int index, int controller)
+	{
+		if (m_gameMode == GameMode.TwoPlayer)
+		{
+			SetPlayerAITwoPlayer(index, controller);
+		}
+		else
+		{
+			SetPlayerAISixPlayer(index, controller);
+		}
+	}
+
+	public void SetPlayerAITwoPlayer(int index, int controller)
 	{
 		switch (controller)
 		{
 			case 1:
-				SetAI(index, m_MCTSController);
+				SetAI(index, m_playerControllerList.MCTSController);
 				break;
 			case 2:
-				SetAI(index, m_miniMaxController);
+				SetAI(index, m_playerControllerList.MiniMaxController);
 				break;
 			case 3:
-				SetAI(index, m_machineLearningAIController);
+				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[0]);
 				break;
 			case 4:
-				SetAI(index, m_machineLearningAIController2);
+				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[1]);
 				break;
 			case 5:
-				SetAI(index, m_machineLearningAIController3);
+				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[2]);
 				break;
 			case 6:
-				SetAI(index, m_machineLearningAIController4);
+				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[3]);
 				break;
 			case 7:
-				SetAI(index, m_machineLearningAIController5);
+				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[4]);
 				break;
 			case 8:
-				SetAI(index, m_machineLearningAIController6);
+				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[5]);
 				break;
 			default:
-				SetAI(index, m_humanController);
+				SetAI(index, m_playerControllerList.HumanController);
+				break;
+		}
+
+	}
+
+	public void SetPlayerAISixPlayer(int index, int controller)
+	{
+		switch (controller)
+		{
+			case 1:
+				SetAI(index, m_playerControllerList.MCTSController);
+				break;
+			case 2:
+				SetAI(index, m_playerControllerList.MaxiMaxController);
+				break;
+			case 3:
+				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[0]);
+				break;
+			case 4:
+				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[1]);
+				break;
+			case 5:
+				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[2]);
+				break;
+			case 6:
+				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[3]);
+				break;
+			case 7:
+				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[4]);
+				break;
+			case 8:
+				SetAI(index, m_playerControllerList.MachineLearningAIControllerList[5]);
+				break;
+			default:
+				SetAI(index, m_playerControllerList.HumanController);
 				break;
 		}
 	}
@@ -190,4 +226,6 @@ public class GameManager : MonoBehaviour
 	{
 		SetPlayerAI(5, controller);
 	}
+
+	// CONFIG RELATED
 }

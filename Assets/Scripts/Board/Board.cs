@@ -6,8 +6,10 @@ using Cysharp.Threading.Tasks;
 public class Board : MonoBehaviour
 {
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
-	[SerializeField] TextAsset m_board;
-	[SerializeField] List<TextAsset> m_winBoards;
+	// [SerializeField] TextAsset m_board;
+	// [SerializeField] List<TextAsset> m_winBoards;
+	//
+	// [SerializeField] Config m
 	[SerializeField] List<List<Node>> m_nodeList;
 	[SerializeField] Node m_node;
 
@@ -26,7 +28,7 @@ public class Board : MonoBehaviour
 
 	void createBoard()
 	{
-		List<List<int>> data = Utils.ReadCSV(m_board);
+		List<List<int>> data = Utils.ReadCSV(m_gameManager.GetCurrBoard());
 
 		int m = data.Count;
 		for (int i = 0; i < m; ++i)
@@ -296,7 +298,7 @@ public class Board : MonoBehaviour
 
 	public void Reset()
 	{
-		List<List<int>> data = Utils.ReadCSV(m_board);
+		List<List<int>> data = Utils.ReadCSV(GetCurrBoard());
 
 		int m = data.Count;
 		for (int i = 0; i < m; ++i)
@@ -316,14 +318,13 @@ public class Board : MonoBehaviour
 
 	public int GetScore(int color)
 	{
-		List<List<int>> winBoard = Utils.ReadCSV(m_winBoards[color - 1]);
+		List<List<int>> winBoard = Utils.ReadCSV(m_gameManager.GetWinBoards()[color - 1]);
 
 		List<Node> nodeList = GetNodesOfColor(color);
 		int score = 0;
 
 		for (int i = 0; i < nodeList.Count; ++i)
 		{
-			// Debug.Log($"{nodeList[i].Y}, {nodeList[i].X}, {score}");
 			score += winBoard[nodeList[i].Y][nodeList[i].X];
 		}
 

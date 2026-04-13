@@ -24,7 +24,8 @@ public class Player : MonoBehaviour
 
 	public async void BeginTurn()
 	{
-		m_playerControllerSO.BeginTurn(m_board, m_gameManager, m_color);
+		await m_playerControllerSO.BeginTurn(m_board, m_color);
+		m_gameManager.NextTurn();
 	}
 
 	public void SetAI(PlayerControllerSO controller)

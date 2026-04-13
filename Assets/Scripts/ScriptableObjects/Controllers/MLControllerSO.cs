@@ -15,7 +15,7 @@ public class MLControllerSO : PlayerControllerSO
 
 	public float Fitness = 0;
 
-	public async override void BeginTurn(Board board, GameManager gm, int color)
+	public async override UniTask BeginTurn(Board board, int color)
 	{
 		List<Node> myNodes = board.GetNodesOfColor(color);
 
@@ -45,12 +45,8 @@ public class MLControllerSO : PlayerControllerSO
 		if (bestStartNode != null && bestPath != null)
 		{
 			Fitness = board.GetScore(color);
-			Debug.Log(Fitness);
 			await board.ChangePosition(bestStartNode, bestPath);
 		}
-
-		await Task.Delay(600);
-		gm.NextTurn();
 	}
 
 	/// <summary>
@@ -74,8 +70,11 @@ public class MLControllerSO : PlayerControllerSO
 		// We temporarily simulate the move to check
 		int oldColor = destination.IsOfPlayer;
 		destination.IsOfPlayer = color;
+		start.IsOfPlayer = 0;
+
 		int nextMoveCount = board.PossibleMoves(destination).Count;
 		destination.IsOfPlayer = oldColor;
+		start.IsOfPlayer = color;
 
 		// Final Linear Equation
 		return (progress * w_ForwardProgress) +

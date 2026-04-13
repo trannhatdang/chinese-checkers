@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public abstract class PlayerControllerSO : ScriptableObject
@@ -6,5 +7,5 @@ public abstract class PlayerControllerSO : ScriptableObject
 	{
 		get { return name; }
 	}
-	public abstract void BeginTurn(Board board, GameManager gm, int color);
+	public abstract UniTask BeginTurn(Board board, int color);
 }

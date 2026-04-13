@@ -56,8 +56,6 @@ public class MinimaxControllerSO : PlayerControllerSO
 			await board.ChangePosition(bestNode, bestMove);
 		}
 
-		// Wait for movement animation (simulated) then end turn
-		await Task.Delay(1000);
 		gm.NextTurn();
 	}
 
@@ -100,25 +98,6 @@ public class MinimaxControllerSO : PlayerControllerSO
 	// A simple heuristic: The sum of distances of all pieces to the "goal"
 	private float EvaluateBoard(Board board, int color)
 	{
-		float score = 0;
-		List<Node> pieces = board.GetNodesOfColor(color);
-
-		// Define your goal position based on the player's color
-		Vector3 goalPos = GetGoalPosition(color);
-
-		foreach (var p in pieces)
-		{
-			// We subtract distance because we want a higher score for being closer
-			score -= Vector3.Distance(p.Position, goalPos);
-		}
-
-		return score;
-	}
-
-	private Vector3 GetGoalPosition(int color)
-	{
-		// Return the target coordinate for the specific player color
-		// This should be the far corner of the Chinese Checkers star
-		return new Vector3(0, 10, 0); // Placeholder
+		return board.GetScore(color);
 	}
 }

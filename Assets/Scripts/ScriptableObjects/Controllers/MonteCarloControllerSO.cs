@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System.Linq;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/PlayerControllers/MCTSControllerSO")]
@@ -9,7 +10,7 @@ public class MCTSControllerSO : PlayerControllerSO
 	[SerializeField] int m_simulationsPerMove = 100;
 	[SerializeField] int m_maxRolloutDepth = 20;
 
-	public async override void BeginTurn(Board board, GameManager gm, int color)
+	public async override void BeginTurn(Board board, int color)
 	{
 		Node bestNode = null;
 		List<Node> bestPath = null;
@@ -57,9 +58,6 @@ public class MCTSControllerSO : PlayerControllerSO
 		{
 			await board.ChangePosition(bestNode, bestPath);
 		}
-
-		await Task.Delay(500);
-		gm.NextTurn();
 	}
 
 	private bool RunRandomRollout(Board board, int aiColor)
@@ -111,20 +109,12 @@ public class MCTSControllerSO : PlayerControllerSO
 				return (node, randomPath[randomPath.Count - 1]);
 			}
 		}
+
 		return (null, null);
 	}
 
 	private bool EvaluateWinner(Board board, int color)
 	{
-		// For MCTS to work, you need a "proxy" win condition.
-		// Usually: is the average distance to the goal smaller than when we started?
-		// float score = 0;
-		// var myNodes = board.GetNodesOfColor(color);
-		// Vector3 goal = new Vector3(0, 10, 0); // Define based on your board layout
-		//
-		// foreach (var n in myNodes) score += Vector3.Distance(n.Position, goal);
-		//
-		// // This is a simplified "win" - did we progress?
 		return board.GetScore(color) > 50;
 	}
 }

@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/PlayerControllers/RandomControllerSO")]
 public class RandomControllerSO : PlayerControllerSO
 {
-	public async override void BeginTurn(Board board, GameManager gm, int color)
+	public async override UniTask BeginTurn(Board board, int color)
 	{
 		// 1. Get all pieces belonging to this player
 		List<Node> myNodes = board.GetNodesOfColor(color);
@@ -38,18 +39,11 @@ public class RandomControllerSO : PlayerControllerSO
 			// 4. Execute the move on the board
 			// This triggers the DOTween animation in your Board script
 			await board.ChangePosition(selectedMove.startNode, selectedMove.path);
-
-			// Wait a moment for the animation to play out (0.5s per step in your Board script)
-			int moveDuration = Mathf.Max(500, selectedMove.path.Count * 500);
-			await Task.Delay(moveDuration);
 		}
 		else
 		{
 			Debug.LogWarning($"Player {color} has no legal moves!");
 			await Task.Delay(500);
 		}
-
-		// 5. Pass the turn to the next player
-		gm.NextTurn();
 	}
 }
