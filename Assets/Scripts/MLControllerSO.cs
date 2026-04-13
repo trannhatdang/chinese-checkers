@@ -11,7 +11,6 @@ public class MLControllerSO : PlayerControllerSO
 	[SerializeField] float w_ForwardProgress = 1.5f;  // Priority: Move toward goal
 	[SerializeField] float w_Centrality = 0.5f;       // Priority: Stay near center line
 	[SerializeField] float w_JumpPotential = 0.8f;    // Priority: Land where more jumps are possible
-	[SerializeField] float w_HomeBaseExit = 2.0f;     // Priority: Get out of the starting area ASAP
 
 	public float Fitness = 0;
 
@@ -89,7 +88,6 @@ public class MLControllerSO : PlayerControllerSO
 		w_ForwardProgress += Random.Range(-mutationRate, mutationRate);
 		w_Centrality += Random.Range(-mutationRate, mutationRate);
 		w_JumpPotential += Random.Range(-mutationRate, mutationRate);
-		w_HomeBaseExit += Random.Range(-mutationRate, mutationRate);
 	}
 
 	public void RandomizeWeights()
@@ -97,7 +95,6 @@ public class MLControllerSO : PlayerControllerSO
 		w_ForwardProgress = Random.Range(-2f, 2f);
 		w_Centrality = Random.Range(-2f, 2f);
 		w_JumpPotential = Random.Range(-2f, 2f);
-		w_HomeBaseExit = Random.Range(-2f, 2f);
 	}
 
 	public void Copy(MLControllerSO cont)
@@ -105,6 +102,5 @@ public class MLControllerSO : PlayerControllerSO
 		w_ForwardProgress = cont.w_ForwardProgress;
 		w_Centrality = cont.w_Centrality;
 		w_JumpPotential = cont.w_JumpPotential;
-		w_HomeBaseExit = cont.w_HomeBaseExit;
 	}
 }

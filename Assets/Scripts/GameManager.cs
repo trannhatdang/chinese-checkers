@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 
 	[SerializeField] int m_currPlayer = 0;
 	[SerializeField] int m_totalTurns = 0;
+	[SerializeField] int m_maxTurns = 10;
 
 	[SerializeField] List<Player> m_playerList;
 
@@ -88,6 +89,25 @@ public class GameManager : MonoBehaviour
 		m_board.Reset();
 	}
 
+	public void FindWinner()
+	{
+		int maxind = 0;
+
+		for (int i = 1; i < m_playerList.Count; ++i)
+		{
+			int currScore = m_board.GetScore(m_playerList[i].Color);
+			int maxScore = m_board.GetScore(m_playerList[maxind].Color);
+
+
+			if (currScore > maxScore)
+			{
+				maxind = i;
+			}
+		}
+
+		DeclareWinner(m_playerList[maxind].Color, m_playerList[maxind].Name);
+	}
+
 	public void NextTurn()
 	{
 		if (m_board.CheckWin(m_playerList[m_currPlayer].Color))
@@ -107,11 +127,18 @@ public class GameManager : MonoBehaviour
 		m_currPlayer = (m_currPlayer + 1) % 6;
 		m_totalTurns++;
 
-		if (m_totalTurns >= 60 && m_endGameCallback != null)
+		if (m_totalTurns >= m_maxTurns)
 		{
 			m_totalTurns = 0;
-			ResetGame();
+			FindWinner();
+			return;
+		}
+
+		if (m_totalTurns >= m_maxTurns && m_endGameCallback != null)
+		{
+			m_totalTurns = 0;
 			m_endGameCallback();
+			ResetGame();
 			return;
 		}
 
@@ -209,6 +236,11 @@ public class GameManager : MonoBehaviour
 	public void SetPlayerSixAI(int controller)
 	{
 		SetPlayerAI(5, controller);
+	}
+
+	public void SetMaxTurns(string numTurns)
+	{
+		m_maxTurns = Int32.Parse(numTurns);
 	}
 
 	// void OnGUI()
