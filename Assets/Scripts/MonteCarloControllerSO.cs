@@ -125,6 +125,6 @@ public class MCTSControllerSO : PlayerControllerSO
 		// foreach (var n in myNodes) score += Vector3.Distance(n.Position, goal);
 		//
 		// // This is a simplified "win" - did we progress?
-		return board.GetScore(color) > 50;
+		return board.GetScore(color) > 10;
 	}
 }

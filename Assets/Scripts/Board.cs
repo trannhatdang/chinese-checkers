@@ -338,4 +338,25 @@ public class Board : MonoBehaviour
 
 		return GetScore(color) >= 50;
 	}
+
+	public Vector3 GetGoalPosition(int color)
+	{
+		switch (color)
+		{
+			case 1:
+				return new Vector3(3, 10, 0);
+			case 2:
+				return new Vector3(-9, 2, 0);
+			case 3:
+				return new Vector3(15, 2, 0);
+			case 4:
+				return new Vector3(-9, 6, 0);
+			case 5:
+				return new Vector3(15, 6, 0);
+			case 6:
+				return new Vector3(3, 6, 0);
+			default:
+				return new Vector3(0, 0, 0);
+		}
+	}
 }

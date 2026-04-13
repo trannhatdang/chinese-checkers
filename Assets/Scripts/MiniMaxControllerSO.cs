@@ -104,7 +104,7 @@ public class MinimaxControllerSO : PlayerControllerSO
 		List<Node> pieces = board.GetNodesOfColor(color);
 
 		// Define your goal position based on the player's color
-		Vector3 goalPos = GetGoalPosition(color);
+		Vector3 goalPos = GetGoalPosition(board, color);
 
 		foreach (var p in pieces)
 		{
@@ -115,10 +115,11 @@ public class MinimaxControllerSO : PlayerControllerSO
 		return score;
 	}
 
-	private Vector3 GetGoalPosition(int color)
+	private Vector3 GetGoalPosition(Board board, int color)
 	{
 		// Return the target coordinate for the specific player color
 		// This should be the far corner of the Chinese Checkers star
-		return new Vector3(0, 10, 0); // Placeholder
+		// return new Vector3(0, 10, 0); // Placeholder
+		return board.GetGoalPosition(color);
 	}
 }

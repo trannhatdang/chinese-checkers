@@ -45,11 +45,9 @@ public class MLControllerSO : PlayerControllerSO
 		if (bestStartNode != null && bestPath != null)
 		{
 			Fitness = board.GetScore(color);
-			Debug.Log(Fitness);
 			await board.ChangePosition(bestStartNode, bestPath);
 		}
 
-		await Task.Delay(600);
 		gm.NextTurn();
 	}
 
@@ -60,7 +58,7 @@ public class MLControllerSO : PlayerControllerSO
 	private float InferMoveValue(Node start, List<Node> path, Board board, int color)
 	{
 		Node destination = path[path.Count - 1];
-		Vector3 goalPos = GetGoalPosition(color);
+		Vector3 goalPos = board.GetGoalPosition(color);
 
 		// Feature 1: Progress (Distance closed to goal)
 		float initialDist = Vector3.Distance(start.Position, goalPos);
@@ -74,19 +72,16 @@ public class MLControllerSO : PlayerControllerSO
 		// We temporarily simulate the move to check
 		int oldColor = destination.IsOfPlayer;
 		destination.IsOfPlayer = color;
+		start.IsOfPlayer = 0;
+
 		int nextMoveCount = board.PossibleMoves(destination).Count;
 		destination.IsOfPlayer = oldColor;
+		start.IsOfPlayer = color;
 
 		// Final Linear Equation
 		return (progress * w_ForwardProgress) +
 		       (centrality * w_Centrality) +
 		       (nextMoveCount * w_JumpPotential);
-	}
-
-	private Vector3 GetGoalPosition(int color)
-	{
-		// Logic to return the target corner based on player index
-		return new Vector3(0, 8, 0);
 	}
 
 	public void Mutate(float mutationRate)
