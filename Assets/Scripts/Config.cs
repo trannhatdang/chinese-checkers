@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 public class Config : MonoBehaviour
 {
+	[SerializeField] List<Player> m_playerList;
 	[SerializeField] GameMode m_currGameMode;
 	[SerializeField] ConstantsSO m_constants;
-	[SerializeField] List<Player> m_playerList;
+	[SerializeField] int m_maxTotalTurns;
 
 	public GameMode CurrGameMode
 	{
@@ -43,12 +44,33 @@ public class Config : MonoBehaviour
 		}
 	}
 
+	public int NumPlayers
+	{
+		get
+		{
+			switch (m_currGameMode)
+			{
+				case GameMode.FourPlayer:
+					return 4;
+				case GameMode.SixPlayer:
+					return 6;
+				default:
+					return 2;
+			}
+		}
+	}
+
+	public int MaxTotalTurns
+	{
+		get { return m_maxTotalTurns; }
+	}
+
 	public void SetAI(int index, PlayerControllerSO controller)
 	{
 		m_playerList[index].SetAI(controller);
 	}
 
-	public void SetPlayerAI(int index, int controller)
+	public void SetAI(int index, int controller)
 	{
 		if (index < 0)
 		{
@@ -103,32 +125,32 @@ public class Config : MonoBehaviour
 
 	public void SetPlayerOneAI(int controller)
 	{
-		SetPlayerAI(0, controller);
+		SetAI(0, controller);
 	}
 
 	public void SetPlayerTwoAI(int controller)
 	{
-		SetPlayerAI(1, controller);
+		SetAI(1, controller);
 	}
 
 	public void SetPlayerThreeAI(int controller)
 	{
-		SetPlayerAI(2, controller);
+		SetAI(2, controller);
 	}
 
 	public void SetPlayerFourAI(int controller)
 	{
-		SetPlayerAI(3, controller);
+		SetAI(3, controller);
 	}
 
 	public void SetPlayerFiveAI(int controller)
 	{
-		SetPlayerAI(4, controller);
+		SetAI(4, controller);
 	}
 
 	public void SetPlayerSixAI(int controller)
 	{
-		SetPlayerAI(5, controller);
+		SetAI(5, controller);
 	}
 
 	public void Copy(Config conf)

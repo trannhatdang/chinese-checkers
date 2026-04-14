@@ -32,11 +32,16 @@ public class GameManager : MonoBehaviour
 		get { return m_currPlayer; }
 	}
 
+	public Config CurrConfig
+	{
+		get { return m_config; }
+	}
+
 	void Start()
 	{
 		for (int i = 0; i < 6; ++i)
 		{
-			m_config.SetPlayerAI(i, 0);
+			m_config.SetAI(i, 0);
 		}
 
 		Time.timeScale = 1.0f;
@@ -114,11 +119,6 @@ public class GameManager : MonoBehaviour
 	}
 
 	// CONFIG RELATED
-
-	public Config GetConfig()
-	{
-		return m_config;
-	}
 
 	public TextAsset GetCurrBoard()
 	{

@@ -35,7 +35,7 @@ public class Trainer : MonoBehaviour
 
 		for (int i = 0; i < 6; ++i)
 		{
-			m_gameManager.SetAI(i, winners[i]);
+			m_gameManager.CurrConfig.SetAI(i, winners[i]);
 			winners[i].Fitness = 0;
 		}
 
@@ -48,7 +48,7 @@ public class Trainer : MonoBehaviour
 		// and assign Fitness = (1 / turnsTaken) or (distanceCovered).
 		for (int i = 0; i < 6; ++i)
 		{
-			m_gameManager.SetPlayerAI(i, i + 3);
+			m_gameManager.CurrConfig.SetAI(i, i + 3);
 		}
 		m_gameManager.StartGame(EvolvePopulation);
 	}
@@ -59,7 +59,5 @@ public class Trainer : MonoBehaviour
 		{
 			m_population[i].RandomizeWeights();
 		}
-
-
 	}
 }

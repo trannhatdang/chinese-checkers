@@ -145,7 +145,7 @@ public class Node : MonoBehaviour
 			if ((mousePos - (Vector2)move[move.Count - 1].transform.position).magnitude < 1)
 			{
 				await m_gameBoard.ChangePosition(this, move);
-				await m_gameBoard.ResetHighlight();
+				m_gameBoard.ResetHighlight();
 				m_gameManager.NextTurn();
 				return;
 			}
